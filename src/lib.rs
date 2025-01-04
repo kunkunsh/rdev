@@ -238,6 +238,9 @@ pub use crate::codes_conv::*;
 pub use keycodes::android::{
     code_from_key as android_keycode_from_key, key_from_code as android_key_from_code,
 };
+pub use keycodes::chrome::{
+    code_from_key as chrome_keycode_from_key, key_from_code as chrome_key_from_code,
+};
 pub use keycodes::linux::{
     code_from_key as linux_keycode_from_key, key_from_code as linux_key_from_code,
 };
@@ -252,14 +255,14 @@ pub use keycodes::windows::{
     get_win_key, key_from_code as win_key_from_keycode, key_from_scancode as win_key_from_scancode,
     scancode_from_key as win_scancode_from_key,
 };
-pub use keycodes::chrome::{
-    code_from_key as chrome_keycode_from_key, key_from_code as chrome_key_from_code,
-};
 
 #[cfg(target_os = "macos")]
 pub use crate::keycodes::macos::{code_from_key, key_from_code, virtual_keycodes::*};
 #[cfg(target_os = "macos")]
-use crate::macos::{display_size as _display_size, listen as _listen, simulate as _simulate};
+use crate::macos::{
+    display_size as _display_size, listen as _listen, simulate as _simulate,
+    stop_listen as _stop_listen,
+};
 #[cfg(target_os = "macos")]
 pub use crate::macos::{set_is_main_thread, Keyboard, VirtualInput};
 #[cfg(target_os = "macos")]
@@ -310,6 +313,11 @@ where
     T: FnMut(Event) + 'static,
 {
     _listen(callback)
+}
+
+#[cfg(target_os = "macos")]
+pub fn stop_listen() -> Result<(), ListenError> {
+    _stop_listen()
 }
 
 /// Sending some events
